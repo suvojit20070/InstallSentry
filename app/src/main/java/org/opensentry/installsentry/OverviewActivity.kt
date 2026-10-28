@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
+@OptIn(ExperimentalMaterial3Api::class)
 class OverviewActivity : ComponentActivity() {
     companion object { const val EXTRA_PACKAGE = "package_name" }
 
@@ -71,7 +72,7 @@ class OverviewActivity : ComponentActivity() {
                             DetailCard("Signing certificate SHA-256", app.sha256, "This is the signing-certificate fingerprint, not a SHA-256 hash of the APK file.")
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 OutlinedButton(onClick = {
-                                    startActivity(Intent(Intent.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${app.packageName}")))
+                                    startActivity(Intent("android.settings.APPLICATION_DETAILS_SETTINGS", Uri.parse("package:${app.packageName}")))
                                 }, modifier = Modifier.weight(1f)) { Text("System app settings") }
                                 OutlinedButton(onClick = {
                                     val launch = packageManager.getLaunchIntentForPackage(app.packageName)

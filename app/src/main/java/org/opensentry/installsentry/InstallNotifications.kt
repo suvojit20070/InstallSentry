@@ -41,7 +41,7 @@ object InstallNotifications {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.stat_sys_install_done)
+            .setSmallIcon(android.R.drawable.ic_menu_info_details)
             .setContentTitle("New app installed")
             .setContentText("${app.label} • ${app.packageName}")
             .setStyle(NotificationCompat.BigTextStyle().bigText(
