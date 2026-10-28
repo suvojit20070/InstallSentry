@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">InstallSentry</string>
+    <string name="app_description">Offline app installation alerts and app details.</string>
+</resources>
