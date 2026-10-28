@@ -54,4 +54,37 @@ object InstallNotifications {
             .build()
         NotificationManagerCompat.from(context).notify(app.packageName.hashCode(), notification)
     }
+
+    /**
+     * Fallback alert used if Android has broadcast the install but package metadata
+     * is temporarily unavailable. This prevents metadata lookup failure from
+     * silently swallowing the new-install notification.
+     */
+    fun showBasic(context: Context, packageName: String) {
+        ensureChannel(context)
+        if (Build.VERSION.SDK_INT >= 33 &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+        ) return
+
+        val intent = Intent(context, OverviewActivity::class.java)
+            .putExtra(OverviewActivity.EXTRA_PACKAGE, packageName)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        val pending = PendingIntent.getActivity(
+            context, packageName.hashCode(), intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.ic_menu_info_details)
+            .setContentTitle("New app installed")
+            .setContentText(packageName)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(
+                "Package: $packageName\\nTap to view app details."
+            ))
+            .setContentIntent(pending)
+            .setAutoCancel(true)
+            .setCategory(NotificationCompat.CATEGORY_STATUS)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .build()
+        NotificationManagerCompat.from(context).notify(packageName.hashCode(), notification)
+    }
 }
